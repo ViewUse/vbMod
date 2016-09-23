@@ -29,14 +29,15 @@ function resetRootData() {
 
 function initFGdb() {
 	fgDB.transaction(function(tx) {
-		// tx.executeSql('DROP TABLE IF EXISTS version');
-		// tx.executeSql('DROP TABLE IF EXISTS seller');
-		// tx.executeSql('DROP TABLE IF EXISTS subshops');
+		tx.executeSql('DROP TABLE IF EXISTS version');
+		tx.executeSql('DROP TABLE IF EXISTS seller');
+		tx.executeSql('DROP TABLE IF EXISTS shop');
 		tx.executeSql('CREATE TABLE IF NOT EXISTS [version] ([id] INTEGER PRIMARY KEY AUTOINCREMENT, [versionCode] VARCHAR2(10))');
-		tx.executeSql('CREATE TABLE IF NOT EXISTS [seller] ([id] VARCHAR2(32),[isRemember] VARCHAR2(32), [mobile] VARCHAR2(16),[userName] VARCHAR2(20), [password] VARCHAR2(20), [ename] VARCHAR2(50), [phone] VARCHAR2(20), [tradeId] VARCHAR2(32),[parentSellerId] VARCHAR2(32), [isparent] BOOLEAN, [lastestlogtime] VARCHAR2(32))');
-		tx.executeSql('CREATE TABLE IF NOT EXISTS [shop] ([id] VARCHAR2(32), [userName] VARCHAR2(32), [sellerId] VARCHAR2(32), [shopName] VARCHAR2(32), [isFollow] BOOLEAN, ');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS [seller] ([id] VARCHAR2(32),[isRemember] VARCHAR2(32), [mobile] VARCHAR2(16),[userName] VARCHAR2(20), [password] VARCHAR2(20), [ename] VARCHAR2(50), [phone] VARCHAR2(20), [tradeId] VARCHAR2(32),[parentSellerId] VARCHAR2(32), [isparent] VARCHAR2(10), [lastestlogtime] VARCHAR2(32))');
+		tx.executeSql('CREATE TABLE IF NOT EXISTS [shop] ([id] VARCHAR2(32), [userName] VARCHAR2(32), [sellerId] VARCHAR2(32), [shopName] VARCHAR2(32), [isFollow] VARCHAR2(10))');
 	}, function() {
 		//alert('初始化表成功');
+		console.log("init success");
 	}, function(er) {
 		if (er) {
 			console.log('error with executeSql', er);
@@ -93,6 +94,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 		// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
 		// for form inputs)
 		winHeight=window.screen.availHeight;
+		console.log(window.openDatabase);
 		if (window.cordova && window.cordova.plugins.Keyboard) {
 			cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
 			cordova.plugins.Keyboard.disableScroll(true);
