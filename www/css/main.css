@@ -170,3 +170,9 @@
 .btn-text-click {
 	margin-top: 25px;
 }
+.qsfx-main {
+	width:100%;
+	height:100%;
+	border:1px solid #ccc;
+	padding:10px;
+}
