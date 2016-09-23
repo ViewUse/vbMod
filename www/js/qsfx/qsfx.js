@@ -1,7 +1,7 @@
 function qsfxCtrl($scope, $state, $timeout, $http, $ionicModal, $ionicLoading,$ionicPopup) {
-	if (!rootScope.checkSession()) {
+	/*if (!rootScope.checkSession()) {
 		return;
-	}
+	}*/
 	$scope.goBack = function() {
 		$state.go("app.main");
 	}
@@ -197,6 +197,8 @@ function qsfxCtrl($scope, $state, $timeout, $http, $ionicModal, $ionicLoading,$i
                  	  var sellNum = 0;
                  	  var countSell = 0;
                  	  var sellAmount = 0.0;
+                 	  if(!json.trendAnalysis) return;
+                 	  if(!json.trendAnalysis.length) return;
                  		for(var i = 0; i < json.trendAnalysis.length; i++){
                  			$scope.items.unshift(json.trendAnalysis[i]);
                  			costAmount = costAmount + json.trendAnalysis[i].costAmount;
@@ -210,6 +212,8 @@ function qsfxCtrl($scope, $state, $timeout, $http, $ionicModal, $ionicLoading,$i
                  		$scope.sellNum = sellNum;
                  		$scope.countSell = countSell;
                  		$scope.sellAmount = sellAmount;
+                 		/*,
+						 {x:'50', y2:'7%',width:'80%',height:'38%'}*/
                     var option = {
 						tooltip:{
 							tigger:'axis',
@@ -218,13 +222,17 @@ function qsfxCtrl($scope, $state, $timeout, $http, $ionicModal, $ionicLoading,$i
 						legend:{
 							data:['销售总额','利润','商品总数']
 						},
-						grid:[
-							 {x:'50', y:'7%',width:'80%',height:'38%'},
-							 {x:'50', y2:'7%',width:'80%',height:'38%'}
-						],
+						/*grid:[
+							 {x:'10%', y:'7%',width:'38%',height:'38%',containLabel:true},
+							 {x2:'10%', y:'7%',width:'38%',height:'38%',containLabel:true},
+							 {x:'10%', y2:'7%',width:'38%',height:'38%',containLabel:true},
+							 {x2:'10%',y2:'7%',width:'38%',height:'38%',containLabel:true}
+						],*/
 						grid: [
-						       {x:'50', y:'7%',width:'80%',height:'38%'},
-						       {x:'50', y2:'7%',width:'80%',height:'38%'}
+						     {left:'7%', top:'7%',height:'25%',containLabel:true},
+						     {left:'7%', top:'36%',height:'25%',containLabel:true},
+						     {left:'7%', top:'65%',height:'25%',containLabel:true},
+						     {left:'7%', top:'94%',height:'25%',containLabel:true}
 						],
 					    toolbox: {
 					    	y:'bottom',
@@ -248,6 +256,19 @@ function qsfxCtrl($scope, $state, $timeout, $http, $ionicModal, $ionicLoading,$i
 						       {
 						    	   type:'category',
 						    	   gridIndex: 1,
+						    	   boundaryGap:false,
+						    	   data: categories
+						       },
+						       {
+						    	   type:'category',
+						    	   gridIndex: 2,
+						    	   boundaryGap:false,
+						    	   data: categories
+						       },
+						       {
+						    	   type:'category',
+						    	   gridIndex: 3,
+						    	   boundaryGap:false,
 						    	   data: categories
 						       }
 						],
@@ -261,6 +282,16 @@ function qsfxCtrl($scope, $state, $timeout, $http, $ionicModal, $ionicLoading,$i
 						    	   type:'value',
 						    	   name:'车陂分店',
 						    	   gridIndex: 1
+						       },
+						       {
+						    	   type:'value',
+						    	   name:'天河分店',
+						    	   gridIndex: 2
+						       },
+						       {
+						    	   type:'value',
+						    	   name:'机场分店',
+						    	   gridIndex: 3
 						       }
 						],
 						series:[
@@ -340,6 +371,48 @@ function qsfxCtrl($scope, $state, $timeout, $http, $ionicModal, $ionicLoading,$i
 						        	"data":numvalues,
 						        	xAxisIndex: 1,
 			                        yAxisIndex: 1,
+						        	markPoint:{
+						        		data:[
+						        			{type:'max',name:'最大值'},
+						        			{type:'min',name:'最小值'}
+						        		]
+						        	}
+
+						        },
+						        {
+						        	"name":"销售总额",
+						        	"type":"line",
+						        	"data":sellvalues,
+						        	xAxisIndex: 2,
+			                        yAxisIndex: 2,
+						        	markPoint:{
+						        		data:[
+						        			{type:'max',name:'最大值'},
+						        			{type:'min',name:'最小值'}
+						        		]
+						        	}
+
+						        },
+						        {
+						        	"name":"利润",
+						        	"type":"line",
+						        	"data":gainvalues,
+						        	xAxisIndex: 2,
+			                        yAxisIndex: 2,
+						        	markPoint:{
+						        		data:[
+						        			{type:'max',name:'最大值'},
+						        			{type:'min',name:'最小值'}
+						        		]
+						        	}
+
+						        },
+						        {
+						        	"name":"商品总数",
+						        	"type":"line",
+						        	"data":numvalues,
+						        	xAxisIndex: 2,
+			                        yAxisIndex: 2,
 						        	markPoint:{
 						        		data:[
 						        			{type:'max',name:'最大值'},
