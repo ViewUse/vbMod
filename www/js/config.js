@@ -1,6 +1,6 @@
-var webHost = "http://www.aibaocloud.com:88/sellerpad";
+//var webHost = "http://www.aibaocloud.com:88/sellerpad";
 //var webHost = "http://192.168.1.106:8020/seller";
-
+var webHost = "http://192.168.1.254:88/sellerpad";
 /**
  * 当前版本号
  */
