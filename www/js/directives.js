@@ -3,10 +3,6 @@ angular.module("starter.directives", [])
 	return {
 		restrict: 'AE',
 		link: function(scope, element, attr) {
-			/**
-			 * platform: 'Android','BlackBerry 10', 'iOS', 'WinCE', 'Tizen'
-			 * browser: 'macintel' on MAC, 'win32' on windows
-			 * */
 			var platform = ionic.Platform.platform();
 			if(platform.search(/ios/i) >= 0)
 				element[0].style.height = ($window.screen.availHeight - 182) + "px";
@@ -21,7 +17,6 @@ angular.module("starter.directives", [])
 	return {
 		restrict: 'AE',
 		link: function(scope, element, attr) {
-			/* 请在使用calc-height的当前controller的scope中指定cHeight的值--通用版 */
 			var cHeight = 0;
 			if(scope.$parent && scope.$parent.cHeight) {
 				if(angular.isNumber(scope.$parent.cHeight)) {
