@@ -187,6 +187,7 @@ function qsfxCtrl($scope, $state, $timeout, $http, $ionicModal, $ionicLoading,$i
             dataType: "json",
             success: function (json) {
                 if(json.status = 200){
+                	console.log(json);
                 	sellvalues = json.sellAmount;
 			 		        gainvalues = json.gainAmount;
 			 		        numvalues = json.commodityNum;
@@ -212,28 +213,68 @@ function qsfxCtrl($scope, $state, $timeout, $http, $ionicModal, $ionicLoading,$i
                  		$scope.sellNum = sellNum;
                  		$scope.countSell = countSell;
                  		$scope.sellAmount = sellAmount;
-                 		/*,
-						 {x:'50', y2:'7%',width:'80%',height:'38%'}*/
+                 		/*
+						 7%  7%  25%   7+fi*(stHeight+4)
+						 7%  36% 25%      
+						 7%  65% 25%
+						 7%  94% 25%
+						 */
+                 		var flen = rootScope.followSubShopps.length;
+                 		console.log(rootScope.followSubShopps);
+                 		var stLeft = 7;
+                 		var stTop = 7;
+                 		var stHeight = 25;
+                 		var chartGrid = [];
+                 		var chartXaxis = [];
+                 		var chartYaxis = [];
+                 		var series = [];
+                 		var legendData = ['销售总额','利润','商品总数'];
+                 		var seriesData = [sellvalues, gainvalues, numvalues];
+                 		var legendLen = legendData.length;
+                 		for(var fi=0;fi<flen;fi++) {
+                 			// grid
+                 			var chartGridEle = {};
+                 			chartGridEle.left = stLeft + '%';
+                 			chartGridEle.top = (stTop + fi*(stHeight + 4)) + '%';
+                 			chartGridEle.height = stHeight + '%';
+                 			chartGridEle.containLabel = true;
+                 			chartGrid.push(chartGridEle);
+                 			// xaxis
+                 			var chartXaxisEle = {};
+                 			chartXaxisEle.type = 'category';
+                 			chartXaxisEle.gridIndex = fi;
+                 			chartXaxisEle.boundaryGap = false;
+                 			chartXaxisEle.data = categories;
+                 			chartXaxis.push(chartXaxisEle);
+                 			// yaxis
+                 			var chartYaxisEle = {};
+                 			chartYaxisEle.type = 'value';
+                 			chartYaxisEle.gridIndex = fi;
+                 			chartYaxisEle.name = rootScope.followSubShopps[fi].name;
+                 			chartYaxis.push(chartYaxisEle);
+                 			// series
+                 			for(var li=0;li<legendLen;li++) {
+                 				var legendSeriesEle = {};
+                 				legendSeriesEle.name = legendData[li];
+                 				legendSeriesEle.type = 'line';
+                 				legendSeriesEle.data = seriesData[li];
+                 				legendSeriesEle.xAxisIndex = fi;
+                 				legendSeriesEle.yAxisIndex = fi;
+                 				legendSeriesEle.markPoint = {
+                 					data:[{type:'max',name:'最大值'},{type:'min',name:'最小值'}]
+                 				};
+                 				series.push(legendSeriesEle);
+                 			}
+                 		}
                     var option = {
 						tooltip:{
 							tigger:'axis',
 							//show:true
 						},
 						legend:{
-							data:['销售总额','利润','商品总数']
+							data:legendData
 						},
-						/*grid:[
-							 {x:'10%', y:'7%',width:'38%',height:'38%',containLabel:true},
-							 {x2:'10%', y:'7%',width:'38%',height:'38%',containLabel:true},
-							 {x:'10%', y2:'7%',width:'38%',height:'38%',containLabel:true},
-							 {x2:'10%',y2:'7%',width:'38%',height:'38%',containLabel:true}
-						],*/
-						grid: [
-						     {left:'7%', top:'7%',height:'25%',containLabel:true},
-						     {left:'7%', top:'36%',height:'25%',containLabel:true},
-						     {left:'7%', top:'65%',height:'25%',containLabel:true},
-						     {left:'7%', top:'94%',height:'25%',containLabel:true}
-						],
+						grid: chartGrid,
 					    toolbox: {
 					    	y:'bottom',
 					        show : true,
@@ -246,182 +287,9 @@ function qsfxCtrl($scope, $state, $timeout, $http, $ionicModal, $ionicLoading,$i
 					        }
 					    },
 					    calculable : true,
-						xAxis:[
-						       {
-						    	   type:'category',
-						    	   gridIndex: 0,
-						    	   boundaryGap:false,
-						    	   data:categories
-						       },
-						       {
-						    	   type:'category',
-						    	   gridIndex: 1,
-						    	   boundaryGap:false,
-						    	   data: categories
-						       },
-						       {
-						    	   type:'category',
-						    	   gridIndex: 2,
-						    	   boundaryGap:false,
-						    	   data: categories
-						       },
-						       {
-						    	   type:'category',
-						    	   gridIndex: 3,
-						    	   boundaryGap:false,
-						    	   data: categories
-						       }
-						],
-						yAxis:[
-						       {
-						    	   type:'value',
-						    	   name:'东圃分店',
-						    	   gridIndex: 0
-						       },
-						       {
-						    	   type:'value',
-						    	   name:'车陂分店',
-						    	   gridIndex: 1
-						       },
-						       {
-						    	   type:'value',
-						    	   name:'天河分店',
-						    	   gridIndex: 2
-						       },
-						       {
-						    	   type:'value',
-						    	   name:'机场分店',
-						    	   gridIndex: 3
-						       }
-						],
-						series:[
-						       {
-						        	"name":"销售总额",
-						        	"type":"line",
-						        	"data":sellvalues,
-						        	xAxisIndex: 0,
-			                        yAxisIndex: 0,
-						        	markPoint:{
-						        		data:[
-						        			{type:'max',name:'最大值'},
-						        			{type:'min',name:'最小值'}
-						        		]
-						        	}
-
-						        },
-						        {
-						        	"name":"利润",
-						        	"type":"line",
-						        	"data":gainvalues,
-						        	xAxisIndex: 0,
-			                        yAxisIndex: 0,
-						        	markPoint:{
-						        		data:[
-						        			{type:'max',name:'最大值'},
-						        			{type:'min',name:'最小值'}
-						        		]
-						        	}
-
-						        },
-						        {
-						        	"name":"商品总数",
-						        	"type":"line",
-						        	"data":numvalues,
-						        	xAxisIndex: 0,
-			                        yAxisIndex: 0,
-						        	markPoint:{
-						        		data:[
-						        			{type:'max',name:'最大值'},
-						        			{type:'min',name:'最小值'}
-						        		]
-						        	}
-
-						        },
-						        {
-						        	"name":"销售总额",
-						        	"type":"line",
-						        	"data":sellvalues,
-						        	xAxisIndex: 1,
-			                        yAxisIndex: 1,
-						        	markPoint:{
-						        		data:[
-						        			{type:'max',name:'最大值'},
-						        			{type:'min',name:'最小值'}
-						        		]
-						        	}
-
-						        },
-						        {
-						        	"name":"利润",
-						        	"type":"line",
-						        	"data":gainvalues,
-						        	xAxisIndex: 1,
-			                        yAxisIndex: 1,
-						        	markPoint:{
-						        		data:[
-						        			{type:'max',name:'最大值'},
-						        			{type:'min',name:'最小值'}
-						        		]
-						        	}
-
-						        },
-						        {
-						        	"name":"商品总数",
-						        	"type":"line",
-						        	"data":numvalues,
-						        	xAxisIndex: 1,
-			                        yAxisIndex: 1,
-						        	markPoint:{
-						        		data:[
-						        			{type:'max',name:'最大值'},
-						        			{type:'min',name:'最小值'}
-						        		]
-						        	}
-
-						        },
-						        {
-						        	"name":"销售总额",
-						        	"type":"line",
-						        	"data":sellvalues,
-						        	xAxisIndex: 2,
-			                        yAxisIndex: 2,
-						        	markPoint:{
-						        		data:[
-						        			{type:'max',name:'最大值'},
-						        			{type:'min',name:'最小值'}
-						        		]
-						        	}
-
-						        },
-						        {
-						        	"name":"利润",
-						        	"type":"line",
-						        	"data":gainvalues,
-						        	xAxisIndex: 2,
-			                        yAxisIndex: 2,
-						        	markPoint:{
-						        		data:[
-						        			{type:'max',name:'最大值'},
-						        			{type:'min',name:'最小值'}
-						        		]
-						        	}
-
-						        },
-						        {
-						        	"name":"商品总数",
-						        	"type":"line",
-						        	"data":numvalues,
-						        	xAxisIndex: 2,
-			                        yAxisIndex: 2,
-						        	markPoint:{
-						        		data:[
-						        			{type:'max',name:'最大值'},
-						        			{type:'min',name:'最小值'}
-						        		]
-						        	}
-
-						        }
-						]
+						xAxis:chartXaxis,
+						yAxis:chartYaxis,
+						series:series
 				};
 				chart.setOption(option);
                 }
